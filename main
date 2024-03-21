@@ -1,0 +1,177 @@
+#include <stdio.h>
+#include <string.h>
+#include <stdlib.h>
+#include <locale.h>
+#include <time.h>
+#include <locale.h>
+
+struct vector {
+    float coordinates[10];
+    int order;
+    int num = 0; //кол-во векторов в 1 структуре
+};
+
+vector* CreateArray(vector* array, int& numofvectors) {
+    if (numofvectors == 0) {
+        vector* array = new vector[numofvectors + 1];
+    }
+    else {
+        vector* temparray = new vector[numofvectors + 1];
+        for (int i = 0; i < numofvectors; i++) {
+            *(temparray + i) = *(array + i);
+        }
+        delete[] array;
+        array = temparray;
+    }
+    numofvectors++;
+    return array;
+}
+
+void Addinf(vector* array, int numofvectors) {
+    puts("Input coordinate of the vector or ENTER:");
+    char line[10];
+    while (gets_s(line), strlen(line) != 0) {
+        float coordinate = atof(line);//////////
+        (array + numofvectors - 1)->coordinates[(array + numofvectors - 1)->num] = coordinate;
+        (array + numofvectors - 1)->num++;
+    }
+    (array + numofvectors - 1)->order = numofvectors - 1;
+}
+
+void Show(vector* array, int numofvectors) {
+    puts("-----------------------------------------\n");
+    for (int i = 0; i < numofvectors; i++) {
+        printf("Vector №%2d. Coordinates:\n", (array + i)->order + 1);
+        for (int j = 0; j < (array + i)->num; j++) {
+            printf("%7.2f", (array + i)->coordinates[j]);
+        }
+        puts("\n");
+    }
+    puts("-----------------------------------------");
+}
+
+void Sum(vector* array, int numofvectors, int ind1, int ind2) {
+    puts("-----------------------------------------\n");
+    if ((array + ind1 - 1)->num != (array + ind2 - 1)->num)
+        printf("The vectors have a different dimension\nThe sum operation is not possible");
+    else {
+        printf("The sum of vector №%2d and vector №%2d:\n", ind1, ind2);
+        for (int i = 0; i < (array + ind1 - 1)->num; i++) {
+            printf("%7.2f", (array + ind1 - 1)->coordinates[i] + (array + ind2 - 1)->coordinates[i]);
+        }
+    }
+    puts("\n");
+}
+
+void Difference(vector* array, int numofvectors, int ind1, int ind2) {
+    puts("-----------------------------------------\n");
+    if ((array + ind1 - 1)->num != (array + ind2 - 1)->num)
+        printf("The vectors have a different dimension\nThe difference operation is not possible");
+    else {
+        printf("The difference of vector №%2d and vector №%2d:\n", ind1, ind2);
+        for (int i = 0; i < (array + ind1 - 1)->num; i++) {
+            printf("%7.2f", (array + ind1 - 1)->coordinates[i] - (array + ind2 - 1)->coordinates[i]);
+        }
+    }
+    puts("\n");
+}
+
+void Product(vector* array, int numofvectors, int ind1, int ind2) {
+    puts("-----------------------------------------\n");
+    if ((array + ind1 - 1)->num != (array + ind2 - 1)->num)
+        printf("The vectors have a different dimension\nThe product operation is not possible");
+    else {
+        printf("The product of vector №%2d and vector №%2d:\n", ind1, ind2);
+        for (int i = 0; i < (array + ind1 - 1)->num; i++) {
+            printf("%7.2f", (array + ind1 - 1)->coordinates[i] * (array + ind2 - 1)->coordinates[i]);
+        }
+    }
+    puts("\n");
+}
+
+void Equality(vector* array, int numofvectors, int ind1, int ind2) {
+    int flag = 1;
+    puts("-----------------------------------------\n");
+    if ((array + ind1 - 1)->num != (array + ind2 - 1)->num)
+        printf("The vectors №%2d and №%2d have a different dimension\nThe vectors aren`t equal", ind1, ind2);
+    else {
+        for (int i = 0; i < (array + ind1 - 1)->num; i++) {
+            if ((array + ind1 - 1)->coordinates[i] != (array + ind2 - 1)->coordinates[i])
+                flag = 0;
+        }
+        if (flag == 1) printf("The vectors №%2d and №%2d are equal", ind1, ind2);
+        else printf("The vectors №%2d and №%2d aren`t equal", ind1, ind2);
+    }
+    puts("\n");
+}
+
+int main() {
+    setlocale(0, "russian");
+    int choice, numofvectors = 0;
+    int ind1, ind2;
+    vector* array = new vector[1];
+    do {
+        puts("--Menu--");
+        puts("1 - Input a new vector");
+        puts("2 - Get a sum of the vectors");
+        puts("3 - Get a difference of the vectors");
+        puts("4 - Get a product of the vector by a number");
+        puts("5 - Check a equality of the vectors");
+        puts("0 - Exit");
+        scanf_s("%d", &choice);
+        scanf_s("%*c");
+        switch (choice) {
+        case 1:
+            array = CreateArray(array, numofvectors);
+            Addinf(array, numofvectors);
+            Show(array, numofvectors);
+            break;
+        case 2:
+            puts("Input the numbers of 2 vectors:");
+            scanf_s("%d %d", &ind1, &ind2);
+            if ((ind1 <= 0 || ind1 > numofvectors) || (ind2 <= 0 || ind2 > numofvectors))
+                printf("\nThere is no vector with this number\n\n");
+            else {
+                Sum(array, numofvectors, ind1, ind2);
+            }
+            Show(array, numofvectors);
+            break;
+        case 3:
+            puts("Input the numbers of 2 vectors:");
+            scanf_s("%d %d", &ind1, &ind2);
+            if ((ind1 <= 0 || ind1 > numofvectors) || (ind2 <= 0 || ind2 > numofvectors))
+                printf("\nThere is no vector with this number\n\n");
+            else {
+                Difference(array, numofvectors, ind1, ind2);
+            }
+            Show(array, numofvectors);
+            break;
+        case 4:
+            puts("Input the numbers of 2 vectors:");
+            scanf_s("%d %d", &ind1, &ind2);
+            if ((ind1 <= 0 || ind1 > numofvectors) || (ind2 <= 0 || ind2 > numofvectors))
+                printf("\nThere is no vector with this number\n\n");
+            else {
+                Product(array, numofvectors, ind1, ind2);
+            }
+            Show(array, numofvectors);
+            break;
+        case 5:
+            puts("Input the numbers of 2 vectors:");
+            scanf_s("%d %d", &ind1, &ind2);
+            if ((ind1 <= 0 || ind1 > numofvectors) || (ind2 <= 0 || ind2 > numofvectors))
+                printf("\nThere is no vector with this number\n\n");
+            else {
+                Equality(array, numofvectors, ind1, ind2);
+            }
+            Show(array, numofvectors);
+            break;
+        case 0:
+            break;
+        default:
+            puts("Wrong command");
+            break;
+        }
+    } while (choice != 0);
+    delete[] array;
+}
